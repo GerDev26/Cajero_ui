@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import './../assets/styles/Buttons.css'
-import { KeyboardScreenContext } from '../contexts/InputContext'
+import { KeyboardScreenContext, UserLoggedContext } from '../contexts/InputContext'
+import { Link } from 'react-router-dom'
 
 export function NumberBtn({children}){
 
@@ -51,12 +52,16 @@ export function ClearBtn({children}){
 export function EnterBtn({children}){
 
     const {text} = useContext(KeyboardScreenContext)
+    const {user, setUser} = useContext(UserLoggedContext)
 
     const handleClick = () => {
-        alert("Tu dni es: " + text)
+        setUser(text)
+        console.log(user)
     }
 
     return(
-        <button style={{backgroundColor: "green"}} className='btn text-btn' onClick={handleClick}>{children}</button>
+        <Link to="/hola">
+            <button style={{backgroundColor: "green", width: "100%", height: "100%"}} className='btn text-btn' onClick={handleClick}>{children}</button>
+        </Link>
     )
 }
