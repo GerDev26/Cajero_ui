@@ -1,36 +1,31 @@
-import { ClearBtn, DeleteBtn, EmptyBtn, EnterBtn, NumberBtn } from "../components/Buttons";
+
 import { KeyboardScreen, MainScreen } from "../components/Screens";
-import { Keyboard } from "../components/Keyboard";
-import { KeyboardScreenProvider } from "../contexts/InputContext";
-import './../assets/styles/home.css'
+import { Keyboard, KeyboardInput } from "../components/Keyboard";
+import { KeyboardContext, KeyboardProvider } from "../contexts/InputContext";
+import './../assets/styles/pages.css'
+import { useContext, useEffect, useState } from "react";
 
 export function Home(){
+
+    const {text} = useContext(KeyboardContext)
+
+    const [isCorrect, setIsCorrect] = useState(false)
+
+    useEffect(() =>{
+        console.log(text ==42)
+        if(text == 42312169){
+            setIsCorrect(!isCorrect)
+        }
+    }, [text])
+
     return(
-        <section className="home">
-        <KeyboardScreenProvider>
+        <>
+            <KeyboardScreen>
+                <Keyboard/>
+            </KeyboardScreen>
             <MainScreen>
-                <Keyboard>
-                    <NumberBtn>1</NumberBtn>
-                    <NumberBtn>2</NumberBtn>
-                    <NumberBtn>3</NumberBtn>
-                    <DeleteBtn>Borrar</DeleteBtn>
-                    <NumberBtn>4</NumberBtn>
-                    <NumberBtn>5</NumberBtn>
-                    <NumberBtn>6</NumberBtn>
-                    <ClearBtn>Limpiar</ClearBtn>
-                    <NumberBtn>7</NumberBtn>
-                    <NumberBtn>8</NumberBtn>
-                    <NumberBtn>9</NumberBtn>
-                    <EnterBtn>Enviar</EnterBtn>
-                    <EmptyBtn></EmptyBtn>
-                    <NumberBtn>0</NumberBtn>
-                    <EmptyBtn></EmptyBtn>
-                </Keyboard>
+                {isCorrect ? "Ingresaste" : <KeyboardInput/>}
             </MainScreen>
-            <MainScreen>
-                <KeyboardScreen/>
-            </MainScreen>
-        </KeyboardScreenProvider>
-        </section>
+        </>
     )
 }

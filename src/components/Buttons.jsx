@@ -1,11 +1,10 @@
 import { useContext } from 'react'
 import './../assets/styles/Buttons.css'
-import { KeyboardScreenContext, UserLoggedContext } from '../contexts/InputContext'
-import { Link } from 'react-router-dom'
+import { KeyboardContext, UserLoggedContext } from '../contexts/InputContext'
 
 export function NumberBtn({children}){
 
-    const {text, setText} = useContext(KeyboardScreenContext)
+    const {text, setText} = useContext(KeyboardContext)
 
     const handleClick = () => {
         if(text.length<8){
@@ -26,7 +25,7 @@ export function EmptyBtn(){
 
 export function DeleteBtn({children}){
 
-    const {text, setText} = useContext(KeyboardScreenContext)
+    const {text, setText} = useContext(KeyboardContext)
 
     const handleClick = () => {
         setText(text.slice(0, -1))
@@ -44,7 +43,7 @@ export function DeleteBtn({children}){
 }
 export function ClearBtn({children}){
 
-    const {setText} = useContext(KeyboardScreenContext)
+    const {setText} = useContext(KeyboardContext)
 
     const handleClick = () => {
         setText("")
@@ -61,7 +60,7 @@ export function ClearBtn({children}){
 
 export function EnterBtn({children}){
 
-    const {text} = useContext(KeyboardScreenContext)
+    const {text} = useContext(KeyboardContext)
     const {user, setUser} = useContext(UserLoggedContext)
 
     const handleClick = () => {

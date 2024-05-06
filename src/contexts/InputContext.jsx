@@ -1,9 +1,9 @@
 import { createContext, useState } from "react";
 
-export const KeyboardScreenContext = createContext()
+export const KeyboardContext = createContext()
 export const UserLoggedContext = createContext()
 
-export function KeyboardScreenProvider({children}){
+export function KeyboardProvider({children}){
 
     const [text, setText] = useState("")
     
@@ -11,9 +11,9 @@ export function KeyboardScreenProvider({children}){
 
 
     return (
-    <KeyboardScreenContext.Provider value={{text, setText, message, setMessage}}>
+    <KeyboardContext.Provider value={{text, setText, message, setMessage}}>
     {children}
-    </KeyboardScreenContext.Provider>
+    </KeyboardContext.Provider>
     )
 }
 export function UserLoggedProvider({children}){
