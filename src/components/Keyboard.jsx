@@ -1,7 +1,6 @@
 import './../assets/styles/Keyboard.css'
-import { useContext } from 'react'
-import { KeyboardContext } from '../contexts/InputContext'
 import { ClearBtn, DeleteBtn, EmptyBtn, EnterBtn, NumberBtn } from "../components/Buttons";
+import { useCheckMessage } from '../hooks/ApiHooks';
 export function Keyboard(){
 
     return(
@@ -26,8 +25,9 @@ export function Keyboard(){
 }
 
 export function KeyboardInput(){
-    const { text } = useContext(KeyboardContext)
 
+    const {text, message} = useCheckMessage()
+    
     const screen = {
         color: "#16919b",
         fontSize: "50px", 
@@ -35,9 +35,11 @@ export function KeyboardInput(){
         backgroundColor: 'rgba(0, 0, 0, 0.450)',
     }
 
+
+
     return(
         <>
-            <p style={{fontSize: "40px", marginBottom: "10px", color: "#16919b", backgroundColor: "rgba(0, 0, 0, 0.450)", padding: "10px"}}>INGRESA TU DNI PARA CONTINUAR</p>
+            <p style={{fontSize: "40px", marginBottom: "10px", color: "#16919b", backgroundColor: "rgba(0, 0, 0, 0.450)", padding: "10px"}}>{message}</p>
             <p style={screen}>{text}</p>
         </>
     )

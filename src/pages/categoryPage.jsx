@@ -1,11 +1,22 @@
+import { SpinLoader } from "../components/Loaders";
 import { CategoryScreen } from "../components/Screens";
+import { useAddCategory, useCategories } from "../hooks/ApiHooks";
 import './../assets/styles/CategoryPage.css'
 
 
 export function CategoryBtn({category}){
+
+    const {setObject} = useAddCategory()
+
+    const handleClick = () => {
+        setObject({
+            sector: category.id,
+            letra: category.letra_id
+        })
+    }
     return(
-        <button className="category">
-            {category}
+        <button onClick={handleClick} className="category">
+            {category.descripcion}
         </button>
     )
 }
@@ -19,13 +30,16 @@ export function CategoryConteiner({children}){
 }
 
 export function CategoryPage(){
+    
+    const {categories} = useCategories()
+
     return(
         <CategoryScreen>
             <CategoryConteiner>
-                <CategoryBtn category={"Category"}/>
-                <CategoryBtn category={"Category"}/>
-                <CategoryBtn category={"Category"}/>
-                <CategoryBtn category={"Category"}/>
+                {categories
+                ? categories.map(category => <CategoryBtn key={category.id} category={category}/>)
+                : <SpinLoader/>
+                }
             </CategoryConteiner>
         </CategoryScreen>
     )

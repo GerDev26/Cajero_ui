@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import './../assets/styles/Buttons.css'
-import { KeyboardContext, UserLoggedContext } from '../contexts/InputContext'
+import { KeyboardContext } from '../contexts/InputContext'
+import { useLogin } from '../hooks/ApiHooks'
 
 export function NumberBtn({children}){
 
@@ -23,7 +24,7 @@ export function EmptyBtn(){
     )
 }
 
-export function DeleteBtn({children}){
+export function DeleteBtn(){
 
     const {text, setText} = useContext(KeyboardContext)
 
@@ -41,7 +42,7 @@ export function DeleteBtn({children}){
         </button>
     )
 }
-export function ClearBtn({children}){
+export function ClearBtn(){
 
     const {setText} = useContext(KeyboardContext)
 
@@ -58,14 +59,12 @@ export function ClearBtn({children}){
     )
 }
 
-export function EnterBtn({children}){
+export function EnterBtn(){
 
     const {text} = useContext(KeyboardContext)
-    const {user, setUser} = useContext(UserLoggedContext)
-
+    const {setDni} = useLogin()
     const handleClick = () => {
-        setUser(text)
-        console.log(user)
+        setDni(text)
     }
 
     return(

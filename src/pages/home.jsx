@@ -1,22 +1,17 @@
 
 import { KeyboardScreen, MainScreen } from "../components/Screens";
 import { Keyboard, KeyboardInput } from "../components/Keyboard";
-import { KeyboardContext, KeyboardProvider } from "../contexts/InputContext";
 import './../assets/styles/pages.css'
-import { useContext, useEffect, useState } from "react";
 
 export function Home(){
 
-    const {text} = useContext(KeyboardContext)
-
-    const [isCorrect, setIsCorrect] = useState(false)
-
-    useEffect(() =>{
-        console.log(text ==42)
-        if(text == 42312169){
-            setIsCorrect(!isCorrect)
-        }
-    }, [text])
+    const estadoGuardado = localStorage.getItem('token');
+    if (estadoGuardado) {
+      const estadoParseado = JSON.parse(estadoGuardado);
+      console.log('Estado recuperado:', estadoParseado.token);
+    } else {
+      console.log('No se encontró ningún estado guardado en localStorage.');
+    }
 
     return(
         <>
@@ -24,7 +19,7 @@ export function Home(){
                 <Keyboard/>
             </KeyboardScreen>
             <MainScreen>
-                {isCorrect ? "Ingresaste" : <KeyboardInput/>}
+                <KeyboardInput/>
             </MainScreen>
         </>
     )
