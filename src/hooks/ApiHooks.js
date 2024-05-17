@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { KeyboardContext } from "../contexts/InputContext"
+import { saveToken, deleteToken, getToken } from "../helpers/tokenHelpers"
+import { LOGIN_ENDPOINT, LOGOUT_ENDPOINT, SECTORES_ENDPOINT, TURNOS_ENDPOINT } from "../services/myApi"
 
 
 export function useCheckMessage(){
@@ -19,21 +21,6 @@ export function useCheckMessage(){
         
     }, [text])
     return {text, message}
-}
-
-async function saveToken(res) {
-    const token = {
-        token: res.access_token,
-        tokenType: res.token_type
-    };
-
-    try {
-        await window.localStorage.setItem('token', JSON.stringify(token));
-        console.log(token);
-    } catch (error) {
-        console.error("Error al guardar el token:", error);
-        throw error; // Propaga el error para que pueda ser manejado externamente
-    }
 }
 
 export function registerUser(dni) {
@@ -66,6 +53,26 @@ export function registerUser(dni) {
     });
 }
 
+export async function logout(){
+    const token = getToken()
+    console.log(token)
+
+    try {
+        const res = await fetch(LOGOUT_ENDPOINT.url, LOGOUT_ENDPOINT.POST.config({token}));
+        if (!res.ok) {
+            if (res.status === 401) {
+                throw new Error();
+            }
+        }
+        const data = await res.json();
+        deleteToken()
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 
 export function useLogin(){
     const [dni, setDni] = useState('')
@@ -73,27 +80,15 @@ export function useLogin(){
     useEffect(() => {
 
         if(dni!=''){
-
-            const url = 'http://127.0.0.1:8000/api/login';
-        
             const data = {
                 dni: dni
             };
-        
-            const configPost = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept' : 'aplication/json'
-                },
-                body: JSON.stringify(data)
-            }
 
-            fetch(url, configPost)
+            fetch(LOGIN_ENDPOINT.url, LOGIN_ENDPOINT.POST.config({data}))
                 .then(async res => {
                     if(!res.ok){
                         if(res.status == 422){
-                            throw new Error("Tu dni debe tener 8 caracteres")
+                            throw new Error()
                         }
                         if(res.status == 401){
                             alert("Se te registro en el sistema")
@@ -104,8 +99,8 @@ export function useLogin(){
                 
                     return res.json()
                 })
-                .then(async response => {
-                    await saveToken(response)
+                .then(response => {
+                    saveToken(response)
                     window.location.href = '/category';
                 
                 })
@@ -122,19 +117,10 @@ export function useLogin(){
 export function useCategories(){
     const [categories, setCategories] = useState(null)
     
-    const tokenString = window.localStorage.getItem('token')
-    let tokenObjeto = JSON.parse(tokenString)
+    const token = getToken()
 
-    const config = {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + tokenObjeto.token,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-    }
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/api/sectores", config)
+        fetch(SECTORES_ENDPOINT.url, SECTORES_ENDPOINT.GET.config({token}))
             .then(response => {
                 if (!response.ok) {
                     if (response.status === 401) {
@@ -145,13 +131,12 @@ export function useCategories(){
                 return response.json();
             })
             .then(data => {
-                console.log("correcto")
+                console.log(data)
                 setCategories(data)
-            
             })
             .catch(error => {
                 console.log(error)
-
+                /* window.location.href = "/" */
             })
     }, [])
 
@@ -163,35 +148,53 @@ export function useAddCategory(){
     const [object, setObject] = useState(null)
 
     if(object!=null){
-        const tokenString = window.localStorage.getItem('token')
-        let tokenObjeto = JSON.parse(tokenString)
-        const url = 'http://127.0.0.1:8000/api/turnos';
+        const token = getToken()
             
-        const request = {
+        const data = {
             sector_id: object.sector,
             letra_id: object.letra,
         };
-            
-        const configPost = {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + tokenObjeto.token,
-                'Content-Type': 'application/json',
-                'Accept' : 'aplication/json'
-            },
-            body: JSON.stringify(request)
-        }
+
     
-        fetch(url, configPost)
-         .then(res => res.json())
-         .then(data => {
-            console.log(data)
-            console.log(request)
+        fetch(TURNOS_ENDPOINT.url, TURNOS_ENDPOINT.POST.config({data, token}))
+         .then(res => {
+            if(!res.ok){
+                if(res.status = 401){
+                    throw new Error("No estas autorizado, primero registrate por favor")
+                }
+                return res.json()
+            }
+         })
+         .then(async response => {
+            console.log(response)
+            await logout()
+            deleteToken()
+            window.location.href = "/"
          })
          .catch(error => {
-            console.log(error)
+            alert(error)
+            window.location.href = "/"
          })
     }
     return {setObject}
 
+}
+
+export function useTurnos(){
+
+    const token = "asdasdasd"
+    const [response, setResponse] = useState()
+
+    useEffect(() => {
+        fetch(TURNOS_ENDPOINT.url, TURNOS_ENDPOINT.GET.config({token}))
+         .then(res => res.json())
+         .then(data => {
+            console.log(data)
+            setResponse(data)
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    } ,[])
+    return response
 }

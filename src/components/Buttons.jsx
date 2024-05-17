@@ -1,11 +1,12 @@
 import { useContext } from 'react'
 import './../assets/styles/Buttons.css'
 import { KeyboardContext } from '../contexts/InputContext'
-import { useLogin } from '../hooks/ApiHooks'
+import { logout, useLogin } from '../hooks/ApiHooks'
 
 export function NumberBtn({children}){
 
     const {text, setText} = useContext(KeyboardContext)
+    
 
     const handleClick = () => {
         if(text.length<8){
@@ -19,8 +20,12 @@ export function NumberBtn({children}){
 }
 
 export function EmptyBtn(){
+
+    const handleClick = () => {
+        logout()
+    }
     return(
-        <button className='btn'></button>
+        <button onClick={handleClick} className='btn'></button>
     )
 }
 

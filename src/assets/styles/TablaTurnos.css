@@ -1,0 +1,49 @@
+.tabla-turnos-container{
+    display: flex;
+    flex-direction: column;
+    height: 99%;
+    width: 99%;
+    gap: 5px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.card-turno{
+    width: 100%;
+    min-height: 100px;
+    height: fit-content;
+    display: grid;
+    gap: 1%;
+    grid-template-columns: 2.4fr .8fr .8fr;
+    background-color: #16919b;
+    padding: 1%;
+    border-radius: 5px;
+    font-size: 40px;
+    font-weight: bold;
+}
+.card-turno div{
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 5px solid white;
+}
+.card-turno-campo{
+    width: 100%;
+    min-height: 100px;
+    height: fit-content;
+    display: grid;
+    gap: 1%;
+    padding: 1%;
+    grid-template-columns: 2.4fr .8fr .8fr;
+    background-color: #16919b;
+    border-radius: 5px;
+    font-size: 24px;
+    font-weight: bold;
+}
+.card-turno-campo div{
+    color: #16919b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}

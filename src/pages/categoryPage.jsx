@@ -1,4 +1,5 @@
 import { SpinLoader } from "../components/Loaders";
+import { LogoutButton } from "../components/LogoutButton";
 import { CategoryScreen } from "../components/Screens";
 import { useAddCategory, useCategories } from "../hooks/ApiHooks";
 import './../assets/styles/CategoryPage.css'
@@ -35,6 +36,7 @@ export function CategoryPage(){
 
     return(
         <CategoryScreen>
+            <LogoutButton/>
             <CategoryConteiner>
                 {categories
                 ? categories.map(category => <CategoryBtn key={category.id} category={category}/>)
