@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import './../assets/styles/Buttons.css'
 import { KeyboardContext } from '../contexts/InputContext'
-import { logout, useLogin } from '../hooks/ApiHooks'
+import { logout, login } from '../hooks/ApiHooks'
 
 export function NumberBtn({children}){
 
@@ -67,9 +67,10 @@ export function ClearBtn(){
 export function EnterBtn(){
 
     const {text} = useContext(KeyboardContext)
-    const {setDni} = useLogin()
     const handleClick = () => {
-        setDni(text)
+        if(text.length === 8){
+            login(text)
+        }
     }
 
     return(

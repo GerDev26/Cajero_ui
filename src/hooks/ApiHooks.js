@@ -7,23 +7,27 @@ import { LOGIN_ENDPOINT, LOGOUT_ENDPOINT, SECTORES_ENDPOINT, TURNOS_ENDPOINT } f
 export function useCheckMessage(){
     const { text } = useContext(KeyboardContext)
     const [message, setMessage] = useState('')
+    const [isOk, setIsOk] = useState(false)
 
     useEffect(() => {
         if(text === ''){
             setMessage('INGRESE SU DNI PARA CONTINUAR')
+            setIsOk(false)
         }
         if(text.length<8 && text != ''){
             setMessage("TU DNI DEBE TENER 8 CARACTERES")
+            setIsOk(false)
         }
         if(text.length === 8){
             setMessage("PULSE LA TECLA ENTER PARA CONTINUAR")
+            setIsOk(true)
         }
         
     }, [text])
-    return {text, message}
+    return {text, message, isOk}
 }
 
-export function registerUser(dni) {
+export function register(dni) {
     return new Promise((resolve, reject) => {
         const url = 'http://127.0.0.1:8000/api/register';
         const data = {
@@ -74,44 +78,35 @@ export async function logout(){
     }
 }
 
-export function useLogin(){
-    const [dni, setDni] = useState('')
+export function login(dni){
 
-    useEffect(() => {
+    const data = {
+        dni: dni
+    }
 
-        if(dni!=''){
-            const data = {
-                dni: dni
-            };
-
-            fetch(LOGIN_ENDPOINT.url, LOGIN_ENDPOINT.POST.config({data}))
-                .then(async res => {
-                    if(!res.ok){
-                        if(res.status == 422){
-                            throw new Error()
-                        }
-                        if(res.status == 401){
-                            alert("Se te registro en el sistema")
-                            const res = await registerUser(dni)
-                            return res.json()
-                        }
-                    }
-                
+    fetch(LOGIN_ENDPOINT.url, LOGIN_ENDPOINT.POST.config({data}))
+        .then(async res => {
+            if(!res.ok){
+                if(res.status == 422){
+                    throw new Error("Tu dni debe tener 8 caracteres")
+                }
+                if(res.status == 401){
+                    alert("Se te registro en el sistema")
+                    const res = await register(dni)
                     return res.json()
-                })
-                .then(response => {
-                    saveToken(response)
-                    window.location.href = '/category';
-                
-                })
-                .catch(error => {
-                    alert(error);
-                });
-        }
-    
-    }, [dni])
-
-    return {setDni}
+                }
+            }
+        
+            return res.json()
+        })
+        .then(response => {
+            saveToken(response)
+            window.location.href = '/category';
+        
+        })
+        .catch(error => {
+            alert(error);
+        });
 }
 
 export function useCategories(){
@@ -180,13 +175,31 @@ export function useAddCategory(){
 
 }
 
-export function useTurnos(){
+export function useTurnosNormal(){
 
     const token = "asdasdasd"
     const [response, setResponse] = useState()
 
     useEffect(() => {
-        fetch(TURNOS_ENDPOINT.url, TURNOS_ENDPOINT.GET.config({token}))
+        fetch(TURNOS_ENDPOINT.url + "?vip=0&sortByDesc=createdDate", TURNOS_ENDPOINT.GET.config({token}))
+         .then(res => res.json())
+         .then(data => {
+            console.log(data)
+            setResponse(data)
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    } ,[])
+    return response
+}
+export function useTurnosVIP(){
+
+    const token = "asdasdasd"
+    const [response, setResponse] = useState()
+
+    useEffect(() => {
+        fetch(TURNOS_ENDPOINT.url + "?vip=1&sortByDesc=createdDate", TURNOS_ENDPOINT.GET.config({token}))
          .then(res => res.json())
          .then(data => {
             console.log(data)

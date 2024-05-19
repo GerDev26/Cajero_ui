@@ -27,7 +27,7 @@ const CONFIGURATION_GET = ({ token = "" }) => {
 export const TURNOS_ENDPOINT = {
     url: API_URL + ENDPOINT_PREFIX + "/turnos",
     GET: {
-        config: ({ token }) => CONFIGURATION_GET({ token })
+        config: ({ token }) => CONFIGURATION_GET({ token }),
     },
     POST: {
         config: ({ token, data }) => CONFIGURATION_POST({ token, data })

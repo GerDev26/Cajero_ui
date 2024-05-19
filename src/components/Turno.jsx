@@ -2,7 +2,7 @@ import '.././assets/styles/TablaTurnos.css'
 export function Turno({turno}){
     return(
         <article className='card-turno'>
-            <div className='card-turno-descripcion'>{turno.descripcion}</div>
+            <div className='card-turno-descripcion'>{turno.sector.descripcion}</div>
             <div className='card-turno-numero'>{turno.numero}</div>
             <div className='card-turno-modulo'>{turno.letra}</div>
         </article>
